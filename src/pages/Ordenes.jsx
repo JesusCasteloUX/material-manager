@@ -3,7 +3,10 @@ import { ESTADOS } from '../data/estados'
 import { formatearFecha } from '../utils/fecha'
 
 export default function Ordenes() {
-  const { ordenes} = useApp()
+  const { ordenes, cargando, errorRed } = useApp()
+
+  if (cargando) return <p>Cargando…</p>
+  if (errorRed && ordenes.length === 0) return <p className="error">{errorRed}</p>
 
   return (
     <div className="card wide">
@@ -17,6 +20,7 @@ export default function Ordenes() {
           <thead>
             <tr>
               <th>Orden</th>
+              <th>Oracle</th>
               <th>Material</th>
               <th>Ubicación</th>
               <th>Cantidad</th>
@@ -25,26 +29,24 @@ export default function Ordenes() {
             </tr>
           </thead>
           <tbody>
-  {ordenes.map((o) => (
-    <tr key={o.id}>
-      <td data-label="Orden" className="orden-id">#{o.id}</td>
-      <td data-label="Oracle">{o.oracle}</td>
-      <td data-label="Material">{o.nombre}</td>
-      <td data-label="Ubicación">{o.zona}</td>
-      <td data-label="Cantidad">
-        <b>
-          {o.cantidad} {catalogo} {o.unidad}
-        </b>
-      </td>
-      <td data-label="Estado">
-        <span className="pill" style={{ color: ESTADOS[o.estado].color }}>
-          {ESTADOS[o.estado].texto.toLowerCase()}
-        </span>
-      </td>
-      <td data-label="Fecha">{formatearFecha(o.fecha)}</td>
-    </tr>
-  ))}
-</tbody>
+            {ordenes.map((o) => (
+              <tr key={o.id}>
+                <td data-label="Orden" className="orden-id">#{o.id}</td>
+                <td data-label="Oracle">{o.oracle}</td>
+                <td data-label="Material">{o.nombre}</td>
+                <td data-label="Ubicación">{o.zona}</td>
+                <td data-label="Cantidad">
+                  <b>{o.cantidad} {o.unidad}</b>
+                </td>
+                <td data-label="Estado">
+                  <span className="pill" style={{ color: ESTADOS[o.estado].color }}>
+                    {ESTADOS[o.estado].texto.toLowerCase()}
+                  </span>
+                </td>
+                <td data-label="Fecha">{formatearFecha(o.fecha)}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     </div>
